@@ -1,38 +1,57 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View , Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
 
 export default function App() {
+  const [dimensions, setDimensions] = useState({
+    window: Dimensions.get('window'),
+  });
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setDimensions({ window });
+    });
+
+    // cleanup
+    return () => {
+      subscription?.remove();
+    };
+  }, []); // ← [] (sonsuz loop’u engeller)
+
+  const windowWidth = dimensions.window.width ;
+  const windowHeight = dimensions.window.height ;
+
   return (
     <View style={styles.container}>
-    <View style={styles.box} >
-      <Text style={styles.text}>Welce</Text>
-      <StatusBar style="auto" />
+      <View
+        style={[
+          styles.box,
+          {
+            width: windowWidth > 500 ? '50%' : '70%',
+            height: windowWidth > 600 ? '60%' : '70%',
+          },
+        ]}
+      >
+        <Text style={{ fontSize: windowWidth > 500 ? 50 : 24 , justifyContent:'center', alignItems:'center'}}>hos geldinis</Text>
+        <StatusBar style="auto" />
       </View>
     </View>
   );
 }
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height; 
-console.log(windowWidth , windowHeight);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'plum',
+    backgroundColor: 'lightgray', 
     justifyContent: 'center',
     alignItems: 'center',
   },
-  box:{
-    width: windowWidth > 400 ? "70%" :"90%" , 
-    height:windowWidth > 600 ? "90%" :"40%",
+  box: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'purple',
-
- 
+    backgroundColor: 'lightblue', 
   },
-  text:{
-    color: 'white',
-    fontSize: windowWidth > 400 ? 50 :24,
-    fontWeight: 'bold',
-  }
 });
+
+
+
