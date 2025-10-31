@@ -1,25 +1,22 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, /*Dimensions */ useWindowDimensions } from 'react-native';
 
-export default function App() {
-  const [dimensions, setDimensions] = useState({
+const App = () => {
+ /* const [windowDimensions, setWindowDimensions] = useState({
     window: Dimensions.get('window'),
   });
 
   useEffect(() => {
     const subscription = Dimensions.addEventListener('change', ({ window }) => {
-      setDimensions({ window });
+      setWindowDimensions({ window });
     });
+    return () => subscription?.remove();
+  }, []); // <= önemli: sadece mount/unmount
 
-    // cleanup
-    return () => {
-      subscription?.remove();
-    };
-  }, []); // ← [] (sonsuz loop’u engeller)
+  const { width, height } = windowDimensions.window; */
 
-  const windowWidth = dimensions.window.width ;
-  const windowHeight = dimensions.window.height ;
+  const windowWith = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;  
 
   return (
     <View style={styles.container}>
@@ -27,31 +24,29 @@ export default function App() {
         style={[
           styles.box,
           {
-            width: windowWidth > 500 ? '50%' : '70%',
-            height: windowWidth > 600 ? '60%' : '70%',
+            width: windowWith > 400 ? '70%' : '90%',
+            height: windowHeight > 600 ? '60%' : '90%',
           },
         ]}
       >
-        <Text style={{ fontSize: windowWidth > 500 ? 50 : 24 , justifyContent:'center', alignItems:'center'}}>hos geldinis</Text>
-        <StatusBar style="auto" />
+        <Text style={{ fontSize: windowWith > 500 ? 50 : 24 }}>welcome</Text>
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'lightgray', 
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'plum',
   },
   box: {
+    backgroundColor: 'lightgreen',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'lightblue', 
   },
 });
 
-
-
+export default App;
